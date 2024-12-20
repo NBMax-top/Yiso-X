@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用帮助 - 极答搜索</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+        .help-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .help-section {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(60,64,67,0.3);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .help-section h2 {
+            color: #202124;
+            font-size: 22px;
+            font-weight: 400;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .help-section p {
+            color: #3c4043;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .help-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .help-section li {
+            color: #3c4043;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .help-section li:before {
+            content: "•";
+            color: #1a73e8;
+            position: absolute;
+            left: 8px;
+        }
+
+        .help-section a {
+            color: #1a73e8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .help-section a:hover {
+            color: #174ea6;
+            text-decoration: underline;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #f8f9fa;
+            border-top: 1px solid #dadce0;
+            padding: 12px 0;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #70757a;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 0 16px;
+        }
+
+        .footer a:hover {
+            color: #202124;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-links" id="headerLinks">
+            <!-- 动态加载头部链接 -->
+        </div>
+    </header>
+
+    <main class="help-container">
+        <div class="help-section">
+            <h2>关于极答搜索</h2>
+            <p>极答搜索是一个搜索引擎，致力于为用户提供最相关的搜索结果。(你也可以理解为是 YISO-X 的演示站点)</p>
+        </div>
+
+        <div class="help-section">
+            <h2>基于什么？</h2>
+            <p>极答搜索基于 YISO 的 Fork 版 YISO-X（近期将会开源）。</p>
+        </div>
+
+        <div class="help-section">
+            <h2>使用指南</h2>
+            <ul>
+                <li>在搜索框中输入关键词</li>
+                <li>点击搜索按钮或按回车进行搜索</li>
+                <li>可以使用"试试手气"功能随机访问一个网站</li>
+                <li>搜索结果会显示网站的认证状态</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h2>认证说明</h2>
+            <ul>
+                <li>官方认证：官方机构认证</li>
+                <li>政府认证：政府部门认证</li>
+                <li>企业认证：企业组织认证</li>
+                <li>个人认证：个人用户认证</li>
+                <li>自营认证：平台自营认证</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links" id="footerLinks">
+            <!-- 动态加载底部链接 -->
+        </div>
+    </footer>
+
+    <script>
+        // 加载网站设置
+        async function loadSettings() {
+            try {
+                const response = await fetch('../api/settings.php');
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    const settings = data.data.settings;
+                    document.title = `使用帮助 - ${settings.title || '极答搜索'}`;
+                    
+                    // 设置头部和底部链接
+                    const headerLinks = JSON.parse(settings.hander || '{}');
+                    const footerLinks = JSON.parse(settings.footer || '{}');
+                    
+                    document.getElementById('headerLinks').innerHTML = Object.entries(headerLinks)
+                        .map(([_, link]) => `<a href="${link.URL}" target="_blank">${link.NAME}</a>`)
+                        .join('');
+                    
+                    document.getElementById('footerLinks').innerHTML = Object.entries(footerLinks)
+                        .map(([_, link]) => `<a href="${link.URL}" target="_blank">${link.NAME}</a>`)
+                        .join('');
+                }
+            } catch (error) {
+                console.error('加载设置失败:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
+</body>
+</html>

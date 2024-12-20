@@ -1,179 +1,264 @@
-/* CSS */
-@import './header/main.css';
-
-/* Search 搜索部分 */
-.searchInfo {
-    width: 80%;
-    margin: 0 auto;
-    text-align: center;
-    margin-top: 20px;
+/* 全局重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.searchInput {
+body {
+  font-family: arial,sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 头部样式 */
+.header {
+  padding: 6px;
+  height: 60px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.header a {
+  color: rgba(0,0,0,.87);
+  padding: 0 15px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.header a:hover {
+  text-decoration: underline;
+}
+
+/* Logo区域 */
+.logo-area {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 290px;
+  justify-content: flex-end;
+  padding-bottom: 20px;
+}
+
+.logo img {
+  max-width: 272px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* 搜索框 */
+.search-box {
+  padding: 20px;
+  max-width: 584px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.search-bar {
+  display: flex;
+  height: 44px;
+  border: 1px solid #dfe1e5;
+  border-radius: 24px;
+  padding: 5px 8px 5px 14px;
+  align-items: center;
+  background: #fff;
+}
+
+.search-bar:hover,
+.search-bar:focus-within {
+  box-shadow: 0 1px 6px rgba(32,33,36,.28);
+  border-color: rgba(223,225,229,0);
+}
+
+/* 打字机动画关键帧 */
+@keyframes typing {
+    from { 
+        width: 0;
+    }
+    to { 
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-right-color: transparent;
+    }
+}
+
+/* 搜索输入框 */
+.search-input {
+    flex: 1;
     border: none;
-    background-color: transparent;
-    border: 1px solid #1699fd;
-    padding: 10px;
-    margin-right: 2px;
-    vertical-align: middle;
-    display: table-cell;
     outline: none;
-}
-
-.searchButton {
-    border: none;
-    background-color: transparent;
-    background-color: #1699fd;
-    color: #ffffff;
-    padding: 10px;
-    vertical-align: middle;
-    display: table-cell;
-}
-
-.searchForm {
-    /* display: table; */
-    width: 100%;
-    height: 100px;
-    /* text-align: center; */
-    overflow: auto;
-}
-
-.recentlyEmploy {
-    width: 80%;
-    margin: 0 auto;
+    padding: 0 8px;
+    font-size: 16px;
+    background: transparent;
+    color: rgba(0,0,0,.87);
+    height: 100%;
+    line-height: 44px;
     position: relative;
-    height: 200px;
-    overflow: auto;
-    box-shadow: 0 2px 10px #dddddd;
-    font-size: 15px;
-    padding-top: 20px;
 }
 
-.recentlyEmploy > div span {
-    font-size: 15px;
-    font-weight: 200;
-    display: block;
-    padding: 5px 5%;
+/* 打字机效果的placeholder */
+.search-input::placeholder {
+    overflow: hidden;
     white-space: nowrap;
-    width: 90%;
-    overflow: auto;
+    animation: typing 2s steps(20, end);
 }
 
-.recentlyEmployRight {
-    position: absolute;
-    right: 0;
-    width: 50%;
-    padding: 10px 0;
-    text-align: center;
-    overflow: auto;
+/* 彩色搜索按钮 */
+.colored-search-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
 }
 
-.recentlyEmployLeft {
-    width: 50%;
-    padding: 10px 0;
-    text-align: center;
-    overflow: auto;
-    margin-right: 50%;
+.colored-search-button:hover {
+  background-color: rgba(60,64,67,0.08);
 }
 
-.recentlyEmploy > span {
-    font-weight: 600;
-    padding: 0 20px;
+/* 彩色搜索图标 */
+.colored-search-icon {
+  width: 24px;
+  height: 24px;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="%234285f4"/></svg>');
 }
 
-/* footer */
+/* 搜索按钮容器 */
+.search-buttons {
+  display: flex;
+  justify-content: center;
+  padding-top: 18px;
+  gap: 12px;
+}
+
+.search-button {
+  background-color: #f8f9fa;
+  border: 1px solid #f8f9fa;
+  border-radius: 4px;
+  color: #3c4043;
+  font-family: arial,sans-serif;
+  font-size: 14px;
+  padding: 0 16px;
+  height: 36px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.search-button:hover {
+  box-shadow: 0 1px 1px rgba(0,0,0,.1);
+  background-color: #f8f9fa;
+  border: 1px solid #dadce0;
+  color: #202124;
+}
+
+/* 搜索结果 */
+.search-results {
+  max-width: 652px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  display: none;
+}
+
+/* 页脚 */
 .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+  margin-top: auto;
+  background: #f2f2f2;
+  padding: 10px 20px;
 }
 
-.footer > div {
-    text-align: center;
-    box-shadow: 0 2px 10px #dddddd;
-    padding: 10px 10px;
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
-.footer > div > span {
-    font-weight: 600;
-    font-size: 15px;
-    margin: 0 10px;
+.footer-links a {
+  color: #70757a;
+  text-decoration: none;
+  font-size: 14px;
 }
 
-.footer a {
-    font-weight: 600;
-    font-size: 10px;
+.footer-links a:hover {
+  text-decoration: underline;
 }
 
-svg {
-    width: 20px;
-    height: 20px;
-    float: right;
-}
-
-.searchInfoList {
-    width: 80%;
-    margin: 0 auto;
-    /* box-shadow: 0 2px 10px #dddddd; */
-    /* padding: 10px 20px; */
-    position: relative;
-}
-
-.searchInfoListTitle {
-    font-size: 15px;
-    font-weight: 600;
-    padding-bottom: 10px;
-    display: inline-block;
-    padding: 20px 20px 10px 20px;
-}
-
-.searchInfoListIntroduce {
-    font-weight: 200;
-    font-size: 15px;
-    display: block;
-    padding: 0 20px;
-    padding-bottom: 20px;
-}
-
-.searchInfoListRight {
-    position: absolute;
-    right: 0;
-    width: 45%;
-    box-shadow: 0 2px 10px #dddddd;
-}
-
-.searchInfoListLeft {
-    box-shadow: 0 2px 10px #dddddd;
-    width: 45%;
-    margin-right: 50%;
-    /* padding: 10px 20px; */
-}
-
-a {
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* 当网页所占屏幕宽度大于 900Px 时 */
-@media screen and (min-width: 900px) {
-    .searchInput {
-        width: 500px;
+/* 搜索框占位符滚动效果 */
+@keyframes scrollText {
+    0%, 10% {
+        transform: translateX(0);
     }
-
-    .searchButton {
-        width: 200px;
+    90%, 100% {
+        transform: translateX(calc(-100% + 300px)); /* 留出一定宽度 */
     }
 }
 
-/* 当网页所占屏幕宽度小于 900Px 时 */
-@media screen and (max-width: 900px) {
-    .footer > div > span {
-        font-weight: 200;
-        font-size: 10px !important;
-        margin: 0;
-    }
+.search-input::placeholder {
+    white-space: nowrap;
+    overflow: hidden;
+}
 
-    .footer a {
-        font-weight: 600;
-        font-size: 10px;
-    }
+/* 当文本超出宽度时启用滚动动画 */
+.scroll-placeholder::placeholder {
+    animation: scrollText 15s linear infinite;
+    padding-right: 50px; /* 为滚动留出空间 */
+}
+
+/* 打字机和滚动组合效果 */
+.typing-and-scroll::placeholder {
+    animation: 
+        typing 2s steps(20, end),
+        scrollText 15s linear infinite;
+    animation-delay: 0s, 2s; /* 先打字,后滚动 */
+}
+
+/* 搜索按钮区域 */
+.search-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+/* 试试手气按钮 */
+.lucky-button {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    font-size: 14px;
+    padding: 0 16px;
+    height: 36px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.lucky-button:hover {
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    background-color: #f8f9fa;
+    border: 1px solid #dadce0;
+    color: #202124;
+}
+
+.lucky-button:focus {
+    border: 1px solid #4285f4;
+    outline: none;
 }

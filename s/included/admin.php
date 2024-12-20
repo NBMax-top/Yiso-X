@@ -1,182 +1,189 @@
 <?php
-    // 不提示错误信息
-    error_reporting(0);
+// 引入数据库配置
+require_once '../../config/MySQL-Configs.php';
+// 引入管理员验证
+require_once 'admin-auth.php';
+checkAdminAuth();
+
+// 获取网站设置
+try {
+    $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    if (!$conn) {
+        throw new Exception("数据库连接失败: " . mysqli_connect_error());
+    }
+    mysqli_set_charset($conn, "utf8mb4");
     
-    // 接受表单数据
-    function formInfo () {
-        $webTitle = $_POST['webTitle'];
-        $webIntroduce = $_POST['webIntroduce'];
-        $webUrl = $_POST['webUrl'];
-
-        return array("webTitle" => $webTitle, "webIntroduce" => $webIntroduce, "webUrl" => $webUrl);
+    $sql = "SELECT setting_name, setting_value FROM WEBSITE_SETTINGS";
+    $result = mysqli_query($conn, $sql);
+    
+    if (!$result) {
+        throw new Exception("查询失败: " . mysqli_error($conn));
     }
-
-    // 判断是否提交信息
-    if (isset($_POST['webSubmit'])) {
-        // 保存数据
-        $formInfo = formInfo();
-
-        // 获取数据库数据
-        $webDatabaseString = file_get_contents('../database/webInfo/webinfo.yiso');
-        // 开启可写模式打开文件
-        $file = fopen("../database/webInfo/webinfo.yiso", "w");
-        // 写入内容
-        $file_fwrite = fwrite($file, $webDatabaseString."\r\n".$formInfo['webTitle']."////".$formInfo['webIntroduce']."////".$formInfo['webUrl']."////".$formInfo['webAuthenticationCode']."////"."0"."////"."0"."////".date('Y/m/d H:i:s')."////"."null"."////"."null"."////"."null"."////"."null");
-        echo "<script>alert('提交成功');</script>";
-        fclose($file);
+    
+    $settings = [];
+    while($row = mysqli_fetch_assoc($result)) {
+        $settings[$row['setting_name']] = $row['setting_value'];
     }
+    
+    $site_title = $settings['title'] ?? '一搜 - 管理后台';
+    
+} catch (Exception $e) {
+    error_log('获取网站设置失败: ' . $e->getMessage());
+    $site_title = '一搜 - 管理后台';
+} finally {
+    if (isset($conn) && $conn instanceof mysqli) {
+        mysqli_close($conn);
+    }
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一搜 - 收录 - 后台</title>
-
-    <!-- 初始化 -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        html,body {
-            height: 100%;
-        }
-        
-        body {
-            font-size: 18px;
-            position: relative;
-        }
-
-        a {
-            color: #000000;
-            text-decoration: none;
-            font-size: 18px;
-        }
-    </style>
-
-    <!-- 引入 CSS 文件 -->
-    <link rel="stylesheet" href="../../css/main.css">
+    <title>管理后台 - <?php echo $site_title; ?></title>
+    <link rel="stylesheet" href="../../css/submit.css">
 </head>
 <body>
-    <header id="Header">
-        <div class="headerRight">
-            <span class="headerInfo"><a href="../../index.php">首页</a></span>
-            <span class="headerInfo"><a href="https://xlj0.com" target="_Blank">作者</a></span>
-        </div>
-
-        <div class="headerLeft">
-            <span class="headerTitle">Yiso</span>
+    <header class="admin-header">
+        <div class="header-content">
+            <a href="../../index.php" class="logo">
+                <img src="../../img/logo.png" alt="Logo" height="30">
+            </a>
+            <div class="admin-nav">
+                <span class="admin-welcome">欢迎, 管理员</span>
+                <a href="admin-auth.php?logout=1" class="admin-button">注销</a>
+            </div>
         </div>
     </header>
 
-    <div class="Filter">
+    <main class="main">
+        <div class="submit-container">
+            <h1>管理后台</h1>
+            <div class="admin-form">
+                <div class="input-group">
+                    <label>网站地址</label>
+                    <input type="url" id="urlInput" placeholder="请输入网站地址 (https://example.com)">
+                </div>
+                <div class="input-group">
+                    <label>网站标题</label>
+                    <input type="text" id="titleInput" placeholder="请输入网站标题">
+                </div>
+                <div class="input-group">
+                    <label>网站描述</label>
+                    <textarea id="descInput" placeholder="请输入网站描述"></textarea>
+                </div>
+                <div class="button-group">
+                    <button id="submitBtn" class="admin-button">提交收录</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        window.API_BASE = '../../api';
         
-    </div>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlInput = document.getElementById('urlInput');
+            const titleInput = document.getElementById('titleInput');
+            const descInput = document.getElementById('descInput');
+            const submitBtn = document.getElementById('submitBtn');
 
-    <div class="padding-top">
-        <!-- Yiso -->
-        <div>
+            async function securePost(url, data) {
+                const timestamp = Date.now();
+                const nonce = Math.random().toString(36).substring(2);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Timestamp': timestamp,
+                        'X-Nonce': nonce,
+                        'X-Admin': 'true'
+                    },
+                    credentials: 'same-origin',  // 发送 session cookie
+                    body: JSON.stringify(data)
+                });
 
-        </div>
-    </div>
+                if (response.status === 403) {
+                    // 如果会话过期，跳转到登录页
+                    window.location.href = 'login.php?expired=1';
+                    return;
+                }
 
-    <div class="helpInfo">
-        <span>提交收录</span>
-        <div>
-            <span>禁止提交违规信息以及反复提交，域名地址需要携带有 http/https 协议头</span>
-            <span>文章地址可以直接把链接粘贴到域名地址</span>
-            <form action="./admin.php" method="post">
-                <input type="text" placeholder="收录名称" name="webTitle">
-                <input type="text" placeholder="介绍信息" name="webIntroduce">
-                <input type="text" placeholder="域名地址" name="webUrl">
-                <button name="webSubmit">提交收录</button>
-            </form>
-        </div>
-    </div>
+                return response.json();
+            }
 
-    <div class="padding-bottom">
+            submitBtn.addEventListener('click', async () => {
+                const url = urlInput.value.trim();
+                const title = titleInput.value.trim();
+                const description = descInput.value.trim();
 
-    </div>
+                if (!url || !title || !description) {
+                    alert('请填写完整信息');
+                    return;
+                }
 
-    <style>
-        .helpInfo {
-            width: 80%;
-            margin: 10px auto;
-            padding: 20px;
-            box-shadow: 0 2px 10px #dddddd;
-        }
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = '提交中...';
+                    
+                    const data = await securePost(`${window.API_BASE}/url-update-admin.php`, {
+                        url,
+                        title,
+                        description
+                    });
+                    
+                    if (data.code === 200) {
+                        alert('提交成功');
+                        // 清空表单
+                        urlInput.value = '';
+                        titleInput.value = '';
+                        descInput.value = '';
+                    } else {
+                        alert(data.message || '提交失败');
+                    }
+                } catch (err) {
+                    console.error('错误详情:', err);
+                    alert('提交失败');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '提交收录';
+                }
+            });
 
-        .helpInfo > span {
-            font-weight: 600;
-        }
+            // 自动保存草稿
+            let draftTimeout;
+            const saveDraft = () => {
+                const draft = {
+                    url: urlInput.value,
+                    title: titleInput.value,
+                    description: descInput.value
+                };
+                localStorage.setItem('adminDraft', JSON.stringify(draft));
+            };
 
-        .helpInfo > div > span {
-            font-weight: 200;
-            font-size: 15px;
-            display: block;
-            padding: 10px;
-        }
+            [urlInput, titleInput, descInput].forEach(input => {
+                input.addEventListener('input', () => {
+                    clearTimeout(draftTimeout);
+                    draftTimeout = setTimeout(saveDraft, 1000);
+                });
+            });
 
-        .helpInfo > div > span > a {
-            font-size: 15px !important;
-        }
-
-        .padding-bottom {
-            padding-bottom: 100px;
-        }
-
-        .footer {
-            position: fixed;
-        }
-        
-        .helpInfo > div {
-            padding-top: 10px;
-        }
-
-        .helpInfo > div > form {
-            text-align: center;
-        }
-
-        .helpInfo > div > form > button {
-            border: none;
-            background-color: transparent;
-            padding: 10px;
-            background-color: #3baaff;
-            margin-top: 2px;
-            color: #ffffff;
-        }
-
-        .helpInfo > div > form > input {
-            background-color: transparent;
-            border: none;
-            padding: 10px;
-            border: 1px solid #2480c7;
-            margin-top: 2px;
-            outline: none;
-        }
-
-        .helpInfo > div > form > img {
-            display: block;
-            margin: 10px auto;
-            box-shadow: 0 2px 10px #2480c7;
-            border-radius: 10px;
-        }
-    </style>
-
-    <div class="footer">
-        <div>
-            <span><a href="./index.html">使用须知</a></span>
-            <span><a href="./responsibility.html">免责申明</a></span>
-            <span><a href="https://beian.miit.gov.cn/#/Integrated/index">豫ICP备2021002284号-1</a></span>
-            <span><a href="https://www.beian.gov.cn/portal/index"><img style="vertical-align: middle;" src="https://xlj0.com/usr/themes/line/img/gwbalogo.png">&nbsp;豫公网安公安局备案 41160202000364号</a></span>
-        </div>
-    </div>
-
-    <!-- 引入 Js 文件 -->
-    <script src="../js/canvasText.js"></script>
+            // 恢复草稿
+            const draft = localStorage.getItem('adminDraft');
+            if (draft) {
+                try {
+                    const { url, title, description } = JSON.parse(draft);
+                    urlInput.value = url || '';
+                    titleInput.value = title || '';
+                    descInput.value = description || '';
+                } catch (e) {
+                    console.error('恢复草稿失败:', e);
+                }
+            }
+        });
+    </script>
 </body>
 </html>

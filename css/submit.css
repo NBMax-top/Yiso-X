@@ -1,0 +1,395 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: arial, sans-serif;
+    background: #fff;
+    color: #202124;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 头部样式 */
+.header {
+    padding: 8px 24px;
+    border-bottom: 1px solid #dadce0;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    max-width: 652px;
+    margin: 0 auto;
+}
+
+.logo {
+    margin-right: 40px;
+}
+
+/* 主要内容区 */
+.main {
+    flex: 1;
+    padding: 35px 20px;
+}
+
+.submit-container {
+    max-width: 652px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #202124;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    margin-bottom: 24px;
+}
+
+/* 表单样式 */
+.submit-form {
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.input-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 输入框通用样式 */
+.input-group input[type="url"],
+.input-group input[type="text"],
+.input-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #202124;
+    height: 40px;
+}
+
+/* 验证码组样式 */
+.captcha-group {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+    align-items: center;  /* 垂直居中对齐 */
+}
+
+.captcha-group input {
+    flex: 1;
+    height: 40px;  /* 与其他输入框保持一致 */
+    padding: 8px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #202124;
+}
+
+.captcha-group img {
+    height: 40px;  /* 与输入框同高 */
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 按钮组样式 */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+    gap: 8px;  /* 按钮之间的间距 */
+}
+
+#fetchBtn {
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    padding: 0 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    height: 36px;
+    min-width: 120px;
+}
+
+#fetchBtn:hover {
+    background: #1557b0;
+    box-shadow: 0 1px 2px rgba(66,133,244,0.3);
+}
+
+#fetchBtn:active {
+    background: #174ea6;
+}
+
+#fetchBtn:disabled {
+    background: #f1f3f4;
+    color: #5f6368;
+    cursor: not-allowed;
+}
+
+/* 提交按钮样式 */
+.submit-button {
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    padding: 0 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    height: 36px;
+    width: 100%;
+    margin-top: 16px;
+    transition: all 0.2s ease;
+}
+
+.submit-button:hover {
+    background: #1557b0;
+    box-shadow: 0 1px 2px rgba(66,133,244,0.3);
+}
+
+.submit-button:active {
+    background: #174ea6;
+}
+
+.submit-button:disabled {
+    background: #dadce0;
+    cursor: not-allowed;
+    color: #5f6368;
+}
+
+/* 结果容器样式 */
+.result-container {
+    margin-top: 24px;
+    padding: 16px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.result-container .input-group + .input-group {
+    margin-top: 16px;
+}
+
+/* 标签样式 */
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 4px;
+}
+
+/* 文本域样式 */
+.input-group textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .header {
+        padding: 8px 16px;
+    }
+    
+    .main {
+        padding: 24px 16px;
+    }
+    
+    .submit-form {
+        padding: 16px;
+    }
+    
+    h1 {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+} 
+
+/* 管理后台特定样式 */
+.admin-header {
+    background: #1a73e8;
+    color: white;
+    padding: 16px 0;
+}
+
+.admin-header .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.admin-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.admin-form .input-group {
+    margin-bottom: 16px;
+}
+
+.admin-form .input-group label {
+    display: block;
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 8px;
+}
+
+.admin-form .input-group input,
+.admin-form .input-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #202124;
+}
+
+.admin-form .input-group textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.admin-form .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.admin-button {
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    padding: 0 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    height: 36px;
+    min-width: 120px;
+    transition: all 0.2s ease;
+}
+
+.admin-button:hover {
+    background: #1557b0;
+    box-shadow: 0 1px 2px rgba(66,133,244,0.3);
+}
+
+.admin-button:active {
+    background: #174ea6;
+}
+
+.admin-button:disabled {
+    background: #dadce0;
+    cursor: not-allowed;
+    color: #5f6368;
+}
+
+/* 管理员表格样式 */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dadce0;
+}
+
+.admin-table th {
+    background: #f8f9fa;
+    font-weight: 500;
+    color: #5f6368;
+}
+
+.admin-table tr:hover {
+    background: #f8f9fa;
+} 
+
+/* 登录页面样式 */
+.login-container {
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 24px;
+}
+
+.login-form {
+    background: #fff;
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.login-form h1 {
+    margin: 0 0 24px;
+    font-size: 24px;
+    color: #202124;
+    text-align: center;
+}
+
+.error-message {
+    background: #fce8e6;
+    color: #d93025;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.login-form .input-group {
+    margin-bottom: 16px;
+}
+
+.login-form .input-group label {
+    display: block;
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 8px;
+}
+
+.login-form .input-group input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #202124;
+}
+
+.login-form .admin-button {
+    width: 100%;
+    margin-top: 24px;
+}
+
+/* 会话过期提示 */
+.session-expired {
+    background: #fef7e0;
+    color: #b06000;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+} 
